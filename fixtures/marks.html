@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><title>Marks</title></head>
+<body>
+  <!--
+    Returned by: POST /vtop/examinations/doStudentMarkView
+    Params: authorizedID, _csrf, semesterSubId
+
+    Parser target: div#fixedTableContainer > table
+    Outer rows alternate: [course summary row] then [row with nested marks table].
+    Outer heading: course code, course title, course type, slot
+    Inner table: component, max marks, weightage %, scored, average, status
+  -->
+
+  <div id="fixedTableContainer">
+    <table class="customTable" border="1" cellpadding="3" cellspacing="0">
+      <tbody>
+        <!-- Heading row -->
+        <tr>
+          <td><b>Sl.No</b></td>
+          <td><b>Course Code</b></td>
+          <td><b>Course Title</b></td>
+          <td><b>Course Type</b></td>
+          <td><b>Slot</b></td>
+        </tr>
+
+        <!-- Course 1: Summary row -->
+        <tr>
+          <td>1</td>
+          <td>BCSE302L</td>
+          <td>Database Management Systems</td>
+          <td>Theory</td>
+          <td>A1+TA1</td>
+        </tr>
+        <!-- Course 1: Nested marks table -->
+        <tr>
+          <td colspan="5">
+            <table border="1" cellpadding="2" cellspacing="0" width="100%">
+              <tr>
+                <td><b>Title</b></td>
+                <td><b>Max Marks</b></td>
+                <td><b>Weightage %</b></td>
+                <td><b>Scored</b></td>
+                <td><b>Weightage Mark</b></td>
+                <td><b>Average</b></td>
+                <td><b>Status</b></td>
+              </tr>
+              <tr>
+                <td>CAT - 1</td>
+                <td>50</td>
+                <td>15</td>
+                <td>42</td>
+                <td>12.6</td>
+                <td>35.5</td>
+                <td>Pass</td>
+              </tr>
+              <tr>
+                <td>CAT - 2</td>
+                <td>50</td>
+                <td>15</td>
+                <td>38</td>
+                <td>11.4</td>
+                <td>33.2</td>
+                <td>Pass</td>
+              </tr>
+              <tr>
+                <td>Digital Assignment</td>
+                <td>100</td>
+                <td>20</td>
+                <td>85</td>
+                <td>17.0</td>
+                <td>72.0</td>
+                <td>Pass</td>
+              </tr>
+              <tr>
+                <td>FAT</td>
+                <td>100</td>
+                <td>50</td>
+                <td>78</td>
+                <td>39.0</td>
+                <td>65.0</td>
+                <td>Pass</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <!-- Course 2: Summary row -->
+        <tr>
+          <td>2</td>
+          <td>BCSE303L</td>
+          <td>Operating Systems</td>
+          <td>Theory</td>
+          <td>B1+TB1</td>
+        </tr>
+        <!-- Course 2: Nested marks table -->
+        <tr>
+          <td colspan="5">
+            <table border="1" cellpadding="2" cellspacing="0" width="100%">
+              <tr>
+                <td><b>Title</b></td>
+                <td><b>Max Marks</b></td>
+                <td><b>Weightage %</b></td>
+                <td><b>Scored</b></td>
+                <td><b>Weightage Mark</b></td>
+                <td><b>Average</b></td>
+                <td><b>Status</b></td>
+              </tr>
+              <tr>
+                <td>CAT - 1</td>
+                <td>50</td>
+                <td>15</td>
+                <td>35</td>
+                <td>10.5</td>
+                <td>31.0</td>
+                <td>Pass</td>
+              </tr>
+              <tr>
+                <td>CAT - 2</td>
+                <td>50</td>
+                <td>15</td>
+                <td>40</td>
+                <td>12.0</td>
+                <td>34.5</td>
+                <td>Pass</td>
+              </tr>
+              <tr>
+                <td>Quiz</td>
+                <td>20</td>
+                <td>10</td>
+                <td>16</td>
+                <td>8.0</td>
+                <td>14.0</td>
+                <td>Pass</td>
+              </tr>
+              <tr>
+                <td>FAT</td>
+                <td>100</td>
+                <td>50</td>
+                <td>70</td>
+                <td>35.0</td>
+                <td>60.0</td>
+                <td>Pass</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <!-- Course 3: Summary row -->
+        <tr>
+          <td>3</td>
+          <td>BMGT105L</td>
+          <td>Principles of Management</td>
+          <td>Theory</td>
+          <td>C1+TC1</td>
+        </tr>
+        <!-- Course 3: Nested marks table -->
+        <tr>
+          <td colspan="5">
+            <table border="1" cellpadding="2" cellspacing="0" width="100%">
+              <tr>
+                <td><b>Title</b></td>
+                <td><b>Max Marks</b></td>
+                <td><b>Weightage %</b></td>
+                <td><b>Scored</b></td>
+                <td><b>Weightage Mark</b></td>
+                <td><b>Average</b></td>
+                <td><b>Status</b></td>
+              </tr>
+              <tr>
+                <td>CAT - 1</td>
+                <td>50</td>
+                <td>20</td>
+                <td>45</td>
+                <td>18.0</td>
+                <td>38.0</td>
+                <td>Pass</td>
+              </tr>
+              <tr>
+                <td>FAT</td>
+                <td>100</td>
+                <td>50</td>
+                <td>82</td>
+                <td>41.0</td>
+                <td>68.0</td>
+                <td>Pass</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</body>
+</html>

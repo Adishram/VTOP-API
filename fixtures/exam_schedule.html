@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><title>Exam Schedule</title></head>
+<body>
+  <!--
+    Returned by: POST /vtop/examinations/doSearchExamScheduleForStudent
+    Params: authorizedID, _csrf, semesterSubId
+
+    Parser target: all <tr> rows
+    First row = heading: slot, date, exam time, venue, location, seat no
+    Exam type headers span multiple columns (colspan > 1).
+    Data rows follow the heading column order.
+  -->
+
+  <table border="1" cellpadding="3" cellspacing="0">
+    <tbody>
+      <!-- Heading row -->
+      <tr>
+        <td><b>Course Code</b></td>
+        <td><b>Course Title</b></td>
+        <td><b>Slot</b></td>
+        <td><b>Exam Date</b></td>
+        <td><b>Exam Time</b></td>
+        <td><b>Venue</b></td>
+        <td><b>Seat Location</b></td>
+        <td><b>Seat No</b></td>
+      </tr>
+
+      <!-- Exam type header (spans multiple cols) -->
+      <tr>
+        <td colspan="8"><b>CAT - I (Continuous Assessment Test 1)</b></td>
+      </tr>
+      <tr>
+        <td>BCSE302L</td>
+        <td>Database Management Systems</td>
+        <td>A1+TA1</td>
+        <td>15-SEP-2025</td>
+        <td>09:30-11:00</td>
+        <td>AB1-301</td>
+        <td>Row 3, Col 5</td>
+        <td>15</td>
+      </tr>
+      <tr>
+        <td>BCSE303L</td>
+        <td>Operating Systems</td>
+        <td>B1+TB1</td>
+        <td>16-SEP-2025</td>
+        <td>14:00-15:30</td>
+        <td>AB2-404</td>
+        <td>Row 2, Col 8</td>
+        <td>28</td>
+      </tr>
+      <tr>
+        <td>BMGT105L</td>
+        <td>Principles of Management</td>
+        <td>C1+TC1</td>
+        <td>17-SEP-2025</td>
+        <td>09:30-11:00</td>
+        <td>AB3-205</td>
+        <td>Row 1, Col 3</td>
+        <td>7</td>
+      </tr>
+
+      <!-- Exam type header -->
+      <tr>
+        <td colspan="8"><b>CAT - II (Continuous Assessment Test 2)</b></td>
+      </tr>
+      <tr>
+        <td>BCSE302L</td>
+        <td>Database Management Systems</td>
+        <td>A1+TA1</td>
+        <td>20-OCT-2025</td>
+        <td>09:30-11:00</td>
+        <td>AB1-301</td>
+        <td>Row 3, Col 5</td>
+        <td>15</td>
+      </tr>
+      <tr>
+        <td>BCSE303L</td>
+        <td>Operating Systems</td>
+        <td>B1+TB1</td>
+        <td>21-OCT-2025</td>
+        <td>14:00-15:30</td>
+        <td>AB2-404</td>
+        <td>Row 2, Col 8</td>
+        <td>28</td>
+      </tr>
+
+      <!-- Exam type header -->
+      <tr>
+        <td colspan="8"><b>FAT (Final Assessment Test)</b></td>
+      </tr>
+      <tr>
+        <td>BCSE302L</td>
+        <td>Database Management Systems</td>
+        <td>A1+TA1</td>
+        <td>08-DEC-2025</td>
+        <td>09:30-12:30</td>
+        <td>AB1-301</td>
+        <td>Row 3, Col 5</td>
+        <td>15</td>
+      </tr>
+      <tr>
+        <td>BCSE303L</td>
+        <td>Operating Systems</td>
+        <td>B1+TB1</td>
+        <td>10-DEC-2025</td>
+        <td>14:00-17:00</td>
+        <td>AB2-404</td>
+        <td>Row 2, Col 8</td>
+        <td>28</td>
+      </tr>
+      <tr>
+        <td>BMGT105L</td>
+        <td>Principles of Management</td>
+        <td>C1+TC1</td>
+        <td>12-DEC-2025</td>
+        <td>09:30-12:30</td>
+        <td>AB3-205</td>
+        <td>Row 1, Col 3</td>
+        <td>7</td>
+      </tr>
+    </tbody>
+  </table>
+</body>
+</html>

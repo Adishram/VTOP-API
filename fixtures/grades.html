@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><title>Grade History</title></head>
+<body>
+  <!--
+    Returned by: POST /vtop/examinations/examGradeView/StudentGradeHistory
+    Params: authorizedID, _csrf, verifyMenu=true
+
+    Parser targets:
+    1. "Effective Grades" table: tr.tableContent rows with per-course grade data.
+       Each row: Sl.No, CourseCode, Title, Type, Credits, Grade, ExamMonth
+       extractGradeRow() locates fields by CONTENT pattern, not column index.
+    2. CGPA summary table: header row contains "Credits Registered" / "Credits Earned" / "CGPA"
+    3. Curriculum Details / Basket Details tables (for parseCurriculumProgress)
+  -->
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       PART 1: Effective Grades (per-course grades, grouped by semester)
+       ═══════════════════════════════════════════════════════════════ -->
+  <table border="1" cellpadding="3" cellspacing="0">
+    <thead>
+      <tr>
+        <td><b>Sl.No</b></td>
+        <td><b>Course Code</b></td>
+        <td><b>Course Title</b></td>
+        <td><b>Course Type</b></td>
+        <td><b>Credits</b></td>
+        <td><b>Grade</b></td>
+        <td><b>Exam Month</b></td>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Fall 2024-25 -->
+      <tr class="tableContent">
+        <td>1</td>
+        <td>BCSE101L</td>
+        <td>Computer Programming</td>
+        <td>Theory</td>
+        <td>4</td>
+        <td>A</td>
+        <td>Nov 2024</td>
+      </tr>
+      <tr class="tableContent">
+        <td>2</td>
+        <td>BMAT201L</td>
+        <td>Discrete Mathematics</td>
+        <td>Theory</td>
+        <td>4</td>
+        <td>S</td>
+        <td>Nov 2024</td>
+      </tr>
+      <tr class="tableContent">
+        <td>3</td>
+        <td>BPHY101L</td>
+        <td>Engineering Physics</td>
+        <td>Theory</td>
+        <td>3</td>
+        <td>B</td>
+        <td>Nov 2024</td>
+      </tr>
+      <tr class="tableContent">
+        <td>4</td>
+        <td>BENG101L</td>
+        <td>Communicative English</td>
+        <td>Theory</td>
+        <td>2</td>
+        <td>A</td>
+        <td>Nov 2024</td>
+      </tr>
+
+      <!-- Winter 2024-25 -->
+      <tr class="tableContent">
+        <td>5</td>
+        <td>BCSE202L</td>
+        <td>Data Structures and Algorithms</td>
+        <td>Theory</td>
+        <td>4</td>
+        <td>S</td>
+        <td>Apr 2025</td>
+      </tr>
+      <tr class="tableContent">
+        <td>6</td>
+        <td>BCSE203L</td>
+        <td>Digital Logic Design</td>
+        <td>Theory</td>
+        <td>4</td>
+        <td>A</td>
+        <td>Apr 2025</td>
+      </tr>
+      <tr class="tableContent">
+        <td>7</td>
+        <td>BMAT202L</td>
+        <td>Linear Algebra</td>
+        <td>Theory</td>
+        <td>4</td>
+        <td>B</td>
+        <td>Apr 2025</td>
+      </tr>
+      <tr class="tableContent">
+        <td>8</td>
+        <td>BECE201L</td>
+        <td>Electronic Circuits</td>
+        <td>Theory</td>
+        <td>3</td>
+        <td>C</td>
+        <td>Apr 2025</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       PART 2: CGPA Summary table
+       ═══════════════════════════════════════════════════════════════ -->
+  <table border="1" cellpadding="3" cellspacing="0">
+    <tr>
+      <td><b>Credits Registered</b></td>
+      <td><b>Credits Earned</b></td>
+      <td><b>CGPA</b></td>
+      <td><b>S Grades</b></td>
+      <td><b>A Grades</b></td>
+      <td><b>B Grades</b></td>
+      <td><b>C Grades</b></td>
+      <td><b>D Grades</b></td>
+      <td><b>E Grades</b></td>
+      <td><b>F Grades</b></td>
+      <td><b>N Grades</b></td>
+    </tr>
+    <tr>
+      <td>28</td>
+      <td>28</td>
+      <td>8.71</td>
+      <td>2</td>
+      <td>3</td>
+      <td>2</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+  </table>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       PART 3: Curriculum Details (for parseCurriculumProgress)
+       ═══════════════════════════════════════════════════════════════ -->
+  <table border="1" cellpadding="3" cellspacing="0">
+    <tr><td colspan="3"><b>Curriculum Details</b></td></tr>
+    <tr class="tableContent">
+      <td>Foundation Core</td>
+      <td>24</td>
+      <td>13</td>
+    </tr>
+    <tr class="tableContent">
+      <td>Discipline Core</td>
+      <td>48</td>
+      <td>12</td>
+    </tr>
+    <tr class="tableContent">
+      <td>Discipline Elective</td>
+      <td>15</td>
+      <td>0</td>
+    </tr>
+    <tr class="tableContent">
+      <td>Open Elective</td>
+      <td>9</td>
+      <td>3</td>
+    </tr>
+    <tr class="fixedContent">
+      <td>Total Credits</td>
+      <td>160</td>
+      <td>28</td>
+    </tr>
+  </table>
+
+  <!-- ═══════════════════════════════════════════════════════════════
+       PART 4: Basket Details
+       ═══════════════════════════════════════════════════════════════ -->
+  <table border="1" cellpadding="3" cellspacing="0">
+    <tr><td colspan="4"><b>Basket Details</b></td></tr>
+    <tr class="tableContent">
+      <td>Mathematics</td>
+      <td>Foundation Core</td>
+      <td>12</td>
+      <td>8</td>
+    </tr>
+    <tr class="tableContent">
+      <td>Science</td>
+      <td>Foundation Core</td>
+      <td>6</td>
+      <td>3</td>
+    </tr>
+    <tr class="tableContent">
+      <td>Programming</td>
+      <td>Discipline Core</td>
+      <td>12</td>
+      <td>8</td>
+    </tr>
+    <tr class="tableContent">
+      <td>Core CS</td>
+      <td>Discipline Core</td>
+      <td>36</td>
+      <td>4</td>
+    </tr>
+  </table>
+</body>
+</html>

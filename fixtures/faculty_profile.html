@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><title>Student Profile</title></head>
+<body>
+  <!--
+    Returned by: POST /vtop/studentsRecord/StudentProfileAllView
+    Params: authorizedID, _csrf, verifyMenu=true
+
+    Parser target: parseProfile()
+    - Registration number: input[name="regno"] value
+    - All other fields: adjacent <td> pairs where the first is a label
+      ("Student Name", "Email", "Mobile Number", etc.) and the second is the value.
+    - First-match semantics: the first occurrence of each label is the student's own data
+      (later occurrences may be faculty/address sections).
+  -->
+
+  <input type="hidden" name="regno" value="REDACTED_REG_NO">
+
+  <table border="1" cellpadding="3" cellspacing="0">
+    <tbody>
+      <tr>
+        <td><b>Application Number</b></td>
+        <td>20251234567</td>
+        <td><b>Student Name</b></td>
+        <td>Demo Student</td>
+      </tr>
+      <tr>
+        <td><b>Programme</b></td>
+        <td>B.Tech</td>
+        <td><b>Branch</b></td>
+        <td>Computer Science and Engineering</td>
+      </tr>
+      <tr>
+        <td><b>School</b></td>
+        <td>School of Computer Science and Engineering (SCOPE)</td>
+        <td><b>Email</b></td>
+        <td>demo.student2025@vitstudent.ac.in</td>
+      </tr>
+      <tr>
+        <td><b>Mobile Number</b></td>
+        <td>9876543210</td>
+        <td><b>Blood Group</b></td>
+        <td>O+</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Faculty advisor details (parseProfile should NOT pick these up as student info) -->
+  <h3>Faculty Advisor</h3>
+  <table border="1" cellpadding="3" cellspacing="0">
+    <tbody>
+      <tr>
+        <td><b>Name</b></td>
+        <td>Dr. Advisor Name</td>
+        <td><b>Email</b></td>
+        <td>advisor@vit.ac.in</td>
+      </tr>
+      <tr>
+        <td><b>Mobile Number</b></td>
+        <td>9123456789</td>
+        <td><b>School</b></td>
+        <td>SCOPE</td>
+      </tr>
+    </tbody>
+  </table>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>VTOP Login</title>
+  <meta name="_csrf" content="a1b2c3d4-e5f6-7890-abcd-ef1234567890">
+</head>
+<body>
+  <!--
+    VTOP Login flow:
+    1. GET /vtop/login => this portal selector page (sets JSESSIONID cookie)
+    2. POST /vtop/prelogin/setup with flag=VTOP => student login form (with captcha)
+    3. POST /vtop/login with username, password, captchaStr, _csrf => dashboard
+
+    This fixture represents step 1: the portal-selector landing page.
+    The _csrf token is extracted from a meta tag or hidden input.
+  -->
+
+  <div class="page-container">
+    <h2>VTOP - VIT Online Portal</h2>
+    <div class="login-options">
+      <button onclick="setupPortal('VTOP')">Student Login (VTOP)</button>
+      <button onclick="setupPortal('EMPLOYEE')">Employee Login</button>
+      <button onclick="setupPortal('PARENT')">Parent Login</button>
+      <button onclick="setupPortal('ALUMNI')">Alumni Login</button>
+    </div>
+    <input type="hidden" name="_csrf" value="a1b2c3d4-e5f6-7890-abcd-ef1234567890">
+  </div>
+
+  <script>
+    function setupPortal(flag) {
+      var form = document.createElement('form');
+      form.method = 'POST';
+      form.action = '/vtop/prelogin/setup';
+      var input = document.createElement('input');
+      input.name = 'flag';
+      input.value = flag;
+      form.appendChild(input);
+      document.body.appendChild(form);
+      form.submit();
+    }
+  </script>
+</body>
+</html>

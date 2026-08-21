@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>VTOP - Student Home</title>
+  <meta name="_csrf" content="11223344-5566-7788-99aa-bbccddeeff00">
+</head>
+<body>
+  <!--
+    Returned by: POST /vtop/login (successful authentication)
+    OR: GET /vtop/content (post-login redirect fallback)
+
+    Key element the scraper must extract:
+    - authorizedID: hidden input #authorizedIDX — this is the student's
+      registration number and MUST be sent as form param on every
+      subsequent authenticated POST request.
+    - _csrf token (rotated on login)
+  -->
+
+  <div class="page-container">
+    <!-- This hidden field is the authentication token for all subsequent requests -->
+    <input type="hidden" id="authorizedIDX" name="authorizedID" value="REDACTED_REG_NO">
+    <input type="hidden" name="_csrf" value="11223344-5566-7788-99aa-bbccddeeff00">
+
+    <div class="dashboard">
+      <h2>Welcome to VTOP</h2>
+      <div class="student-info">
+        <p>Registration Number: <span id="regNo">REDACTED_REG_NO</span></p>
+        <p>Name: <span id="studentName">Demo Student</span></p>
+      </div>
+
+      <div class="quick-links">
+        <h3>Quick Links</h3>
+        <ul>
+          <li><a href="#" onclick="loadPage('processViewStudentAttendance')">Attendance</a></li>
+          <li><a href="#" onclick="loadPage('processViewTimeTable')">Time Table</a></li>
+          <li><a href="#" onclick="loadPage('examinations/doStudentMarkView')">Marks</a></li>
+          <li><a href="#" onclick="loadPage('examinations/doSearchExamScheduleForStudent')">Exam Schedule</a></li>
+          <li><a href="#" onclick="loadPage('examinations/examGradeView/StudentGradeHistory')">Grade History</a></li>
+          <li><a href="#" onclick="loadPage('academics/common/CalendarPreview')">Academic Calendar</a></li>
+          <li><a href="#" onclick="loadPage('studentsRecord/StudentProfileAllView')">Profile</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Semester selector (shared across multiple pages) -->
+    <select id="semesterSubId" name="semesterSubId">
+      <option value="">--Select Semester--</option>
+      <option value="CH2025261">Fall Semester 2025-26</option>
+      <option value="CH2025262">Winter Semester 2025-26</option>
+      <option value="CH2024251">Fall Semester 2024-25</option>
+      <option value="CH2024252">Winter Semester 2024-25</option>
+    </select>
+  </div>
+</body>
+</html>

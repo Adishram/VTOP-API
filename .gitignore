@@ -1,0 +1,11 @@
+# Build artifacts
+/target
+
+# Environment (never commit real .env)
+.env
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo

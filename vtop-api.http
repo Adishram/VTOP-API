@@ -1,0 +1,54 @@
+### Initiate Login (Get CAPTCHA)
+POST http://localhost:8080/api/login
+
+> {% 
+    client.global.set("login_session_id", response.body.data.login_session_id);
+%}
+
+### Verify Login (Submit Credentials)
+# Replace YOUR_USERNAME, YOUR_PASSWORD, and CAPTCHA_TEXT with real values from the previous step's image
+POST http://localhost:8080/api/login/verify
+Content-Type: application/json
+
+{
+  "login_session_id": "{{login_session_id}}",
+  "username": "YOUR_USERNAME",
+  "password": "YOUR_PASSWORD",
+  "captcha_text": "CAPTCHA_TEXT"
+}
+
+> {% 
+    client.global.set("jwt_token", response.body.data.token);
+%}
+
+### Get Attendance
+GET http://localhost:8080/api/attendance?semester=CH2025261
+Authorization: Bearer {{jwt_token}}
+
+### Get Timetable
+GET http://localhost:8080/api/timetable?semester=CH2025261
+Authorization: Bearer {{jwt_token}}
+
+### Get Marks
+GET http://localhost:8080/api/marks?semester=CH2025261
+Authorization: Bearer {{jwt_token}}
+
+### Get Exam Schedule
+GET http://localhost:8080/api/exams?semester=CH2025261
+Authorization: Bearer {{jwt_token}}
+
+### Get Grades History (CGPA)
+GET http://localhost:8080/api/grades
+Authorization: Bearer {{jwt_token}}
+
+### Get Academic Calendar
+GET http://localhost:8080/api/calendar
+Authorization: Bearer {{jwt_token}}
+
+### Get Available Semesters (Courses endpoint)
+GET http://localhost:8080/api/courses
+Authorization: Bearer {{jwt_token}}
+
+### Get Faculty/Student Profile
+GET http://localhost:8080/api/faculty
+Authorization: Bearer {{jwt_token}}

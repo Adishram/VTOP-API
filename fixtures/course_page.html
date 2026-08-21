@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><title>Course Page</title></head>
+<body>
+  <!--
+    Returned by: POST /vtop/academics/common/StudentTimeTableChn
+    Params: authorizedID, _csrf, verifyMenu=true
+
+    This is the semester-selector page that feeds both timetable and attendance.
+    Parser target: parseSemesters()
+    - select#semesterSubId or any <select> with <option> elements
+    - Each option: value = semester ID (e.g. "CH2025261"), text = semester name
+  -->
+
+  <div class="page-container">
+    <h2>Select Semester</h2>
+
+    <select id="semesterSubId" name="semesterSubId">
+      <option value="">--Select Semester--</option>
+      <option value="CH2025261">Fall Semester 2025-26</option>
+      <option value="CH2025262">Winter Semester 2025-26</option>
+      <option value="CH2024251">Fall Semester 2024-25</option>
+      <option value="CH2024252">Winter Semester 2024-25</option>
+      <option value="CH2024253">Summer Semester 2024-25</option>
+    </select>
+
+    <p>Select a semester and click "Submit" to view your courses, timetable, or attendance.</p>
+    <button onclick="submitSemester()">Submit</button>
+  </div>
+</body>
+</html>
