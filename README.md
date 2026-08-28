@@ -145,6 +145,3 @@ This proxy acts as a secure, stateless bridge.
 - **In-Memory Sessions:** Authenticated sessions are held in memory and automatically garbage-collected after expiration.
 - **Fast:** Subsequent requests hit cached data (when appropriate) to reduce latency and VTOP server load.
 
-## 📄 License
-
-MIT License. See `LICENSE` for more details.
