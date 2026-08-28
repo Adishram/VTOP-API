@@ -35,6 +35,15 @@ pub async fn attendance(
         return Ok(Json(ApiResponse::ok(records)));
     }
 
+    // Step 1: Hit the menu endpoint to initialize the session state for Attendance
+    let menu_url = format!("{}/academics/common/StudentAttendance", state.config.vtop_base_url);
+    let _ = vtop_client::fetch_html(&auth, &menu_url, &[
+        ("authorizedID", auth.authorized_id.as_str()),
+        ("verifyMenu", "true"),
+        ("_csrf", auth.csrf_token.as_str()),
+    ]).await?;
+
+    // Step 2: Fetch the actual data
     let url = format!("{}/processViewStudentAttendance", state.config.vtop_base_url);
     let html = vtop_client::fetch_html(&auth, &url, &[
         ("authorizedID", auth.authorized_id.as_str()),
@@ -67,6 +76,15 @@ pub async fn timetable(
         return Ok(Json(ApiResponse::ok(records)));
     }
 
+    // Step 1: Hit the menu endpoint to initialize the session state for Timetable
+    let menu_url = format!("{}/academics/common/StudentTimeTableChn", state.config.vtop_base_url);
+    let _ = vtop_client::fetch_html(&auth, &menu_url, &[
+        ("authorizedID", auth.authorized_id.as_str()),
+        ("verifyMenu", "true"),
+        ("_csrf", auth.csrf_token.as_str()),
+    ]).await?;
+
+    // Step 2: Fetch the actual data
     let url = format!("{}/processViewTimeTable", state.config.vtop_base_url);
     let html = vtop_client::fetch_html(&auth, &url, &[
         ("authorizedID", auth.authorized_id.as_str()),
@@ -96,6 +114,15 @@ pub async fn marks(
         return Ok(Json(ApiResponse::ok(records)));
     }
 
+    // Step 1: Hit the menu endpoint to initialize the session state for Marks
+    let menu_url = format!("{}/examinations/StudentMarkView", state.config.vtop_base_url);
+    let _ = vtop_client::fetch_html(&auth, &menu_url, &[
+        ("authorizedID", auth.authorized_id.as_str()),
+        ("verifyMenu", "true"),
+        ("_csrf", auth.csrf_token.as_str()),
+    ]).await?;
+
+    // Step 2: Fetch the actual data
     let url = format!("{}/examinations/doStudentMarkView", state.config.vtop_base_url);
     let html = vtop_client::fetch_html(&auth, &url, &[
         ("authorizedID", auth.authorized_id.as_str()),
@@ -125,6 +152,15 @@ pub async fn exams(
         return Ok(Json(ApiResponse::ok(records)));
     }
 
+    // Step 1: Hit the menu endpoint to initialize the session state for Exams
+    let menu_url = format!("{}/examinations/ExamScheduleForStudent", state.config.vtop_base_url);
+    let _ = vtop_client::fetch_html(&auth, &menu_url, &[
+        ("authorizedID", auth.authorized_id.as_str()),
+        ("verifyMenu", "true"),
+        ("_csrf", auth.csrf_token.as_str()),
+    ]).await?;
+
+    // Step 2: Fetch the actual data
     let url = format!("{}/examinations/doSearchExamScheduleForStudent", state.config.vtop_base_url);
     let html = vtop_client::fetch_html(&auth, &url, &[
         ("authorizedID", auth.authorized_id.as_str()),

@@ -1,163 +1,150 @@
-# VTOP API Backend 🎓
+# VTOP-API
 
-Welcome to the VTOP API project! This backend is a fast, async Rust service designed to scrape the VIT Chennai VTOP student portal on behalf of a user and expose their academic data as a clean, structured JSON API. 
+A lightning-fast, headless REST API built in Rust (`axum`) for interacting with the VIT Chennai VTOP Portal.
 
-It is designed to be the foundational backend for custom student-built apps (like React Native mobile apps or Next.js dashboards).
+## Features
 
-## ✨ Features
-- **Stateless Authentication**: Uses JWTs. User credentials are *never* stored on disk, logged, or saved. 
-- **Aggressive Caching**: Short-lived (3 min) memory caches prevent your frontend hot-reloads from hammering VTOP.
-- **Strict Throttling**: Parallel requests to VTOP are serialized and spaced out by 500ms to mimic human clicking and prevent account bans.
-- **Resilient**: Auto-retries timeouts and cleanly detects VTOP session expirations, returning actionable error codes (`VTOP_SESSION_EXPIRED`) instead of crashing.
+- **Fast & Concurrent:** Built with Rust, leveraging `axum` and `tokio` for high performance.
+- **Academic Data Extraction:** Seamlessly fetches Attendance, Marks, Timetable, Grades, Faculty Profile, and Academic Calendar.
+- **Smart Caching & Rate Limiting:** Prevents your accounts from getting locked by VTOP due to excessive requests.
+- **Plug-and-Play:** Easily deployable using Docker and Docker Compose.
 
 ---
 
-## 🚀 Getting Started
+## 🚀 Quick Start (Docker)
 
-### Prerequisites
-- Rust (Cargo) installed.
-- Access to the VIT Chennai VTOP portal (you need a valid Registration Number and Password).
+The absolute easiest way to run VTOP-API is using Docker. It requires zero dependencies other than Docker and Docker Compose.
 
-### 1. Environment Setup
-Create a `.env` file in the root directory (you can copy `.env.example` if it exists):
-```env
-# The port the API will run on
-PORT=8080
-# The upstream VTOP portal URL
-VTOP_BASE_URL=https://vtop.vitchennai.ac.in/vtop
-# Note: You can override VTOP_BASE_URL for testing against mock servers.
-```
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/Adishram/VTOP-API.git
+   cd VTOP-API
+   ```
 
-### 2. Run the Server
+2. **Start the API:**
+   ```bash
+   docker compose up -d
+   ```
+
+The API is now running locally on `http://127.0.0.1:3000`!
+
+---
+
+## 🛠 Manual Setup (Cargo)
+
+If you prefer to run it natively or want to contribute:
+
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/Adishram/VTOP-API.git
+   cd VTOP-API
+   ```
+
+2. **Run the server:**
+   ```bash
+   cargo run --release
+   ```
+
+*(Requires Rust toolchain to be installed).*
+
+---
+
+## 📖 API Usage Guide
+
+Testing the API is incredibly simple. Below is a step-by-step walkthrough using `httpie` (you can also use Postman, Insomnia, or cURL).
+
+### 1. Initiate Login
+
+First, request a captcha image and an internal login session ID.
+
 ```bash
-cargo run
-```
-You should see: `Listening on 0.0.0.0:8080`.
-
----
-
-## 📖 API Documentation & Testing
-
-This repository includes two ways to explore the API:
-1. **OpenAPI Spec**: Open `openapi.yaml` in Swagger UI, Postman, or any OpenAPI viewer for the full schema.
-2. **VS Code HTTP Client**: Open `vtop-api.http` using the **REST Client** extension in VS Code. This allows you to execute the login flow and test endpoints directly from your editor.
-
-### The Standard Envelope
-Every response from this API guarantees a consistent JSON envelope:
-```json
-{
-  "status": "ok",      // "ok" or "error"
-  "data": { ... },     // The requested payload (null if error)
-  "error": null        // Error message or code (e.g. "VTOP_SESSION_EXPIRED")
-}
+http POST http://127.0.0.1:3000/api/login username="YOUR_REGISTRATION_NUMBER"
 ```
 
----
-
-## 🔐 The Login Flow (How to Authenticate)
-
-Because VTOP requires solving a CAPTCHA to log in, authentication is a two-step process:
-
-### Step 1: Initiate Login
-Fetch the CAPTCHA image and get a temporary login session ID.
-```bash
-curl -X POST http://localhost:8080/api/login
-```
-**Response**:
+**Expected Response:**
 ```json
 {
   "status": "ok",
   "data": {
-    "login_session_id": "c7a8b9f1-...",
-    "captcha_base64": "data:image/png;base64,iVBORw0KGgo..."
-  },
-  "error": null
+    "login_session_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+    "captcha_image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAA..."
+  }
 }
 ```
+*Note: You can copy the base64 string into a web browser URL bar to view and solve the captcha.*
 
-### Step 2: Verify Credentials
-Submit your actual credentials along with the solved CAPTCHA text.
+### 2. Verify Login
+
+Submit your credentials along with the solved captcha and the `login_session_id` from Step 1.
+
 ```bash
-curl -X POST http://localhost:8080/api/login/verify \
-  -H "Content-Type: application/json" \
-  -d '{
-    "login_session_id": "YOUR_LOGIN_SESSION_ID",
-    "username": "20BCE0000",
-    "password": "YOUR_PASSWORD",
-    "captcha_text": "Q8B9A"
-  }'
+http POST http://127.0.0.1:3000/api/login/verify \
+    login_session_id="a1b2c3d4-e5f6-7890-abcd-ef1234567890" \
+    username="YOUR_REGISTRATION_NUMBER" \
+    password="YOUR_PASSWORD" \
+    captcha="SOLVED_CAPTCHA_TEXT"
 ```
-**Response**:
+
+**Expected Response:**
 ```json
 {
   "status": "ok",
   "data": {
     "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-  },
-  "error": null
+  }
 }
 ```
-*Save this `token`. You must pass it as a Bearer token in the `Authorization` header for all subsequent requests.*
+*Keep this `token` handy. You will use it as a Bearer token in the `Authorization` header for all subsequent requests.*
 
----
+### 3. Fetch Available Semesters
 
-## 📚 Academic Endpoints (Authenticated)
+Before fetching academic data, retrieve the list of available semesters.
 
-For all the endpoints below, you must include the header:
-`Authorization: Bearer YOUR_JWT_TOKEN`
-
-Some endpoints take an optional `?semester=CH2025261` query parameter. If omitted, it defaults to the current active semester.
-
-### 1. Attendance
-Computes your attended/total classes and tells you how many you can miss to stay above 75%.
 ```bash
-curl -H "Authorization: Bearer YOUR_TOKEN" http://localhost:8080/api/attendance
+http GET "http://127.0.0.1:3000/api/courses" \
+    Authorization:"Bearer YOUR_JWT_TOKEN"
 ```
 
-### 2. Timetable
-Returns your registered courses and weekly schedule slots.
+Find the semester ID you want to query (e.g., `CH2025261`).
+
+### 4. Fetch Academic Data
+
+You can now use the JWT token and your chosen semester ID to seamlessly interact with any of the academic endpoints.
+
+**Attendance:**
 ```bash
-curl -H "Authorization: Bearer YOUR_TOKEN" http://localhost:8080/api/timetable
+http GET "http://127.0.0.1:3000/api/attendance?semester=CH2025261" \
+    Authorization:"Bearer YOUR_JWT_TOKEN"
 ```
 
-### 3. Marks
-Returns detailed component marks (CAT 1, CAT 2, FAT, Assignments).
+**Marks:**
 ```bash
-curl -H "Authorization: Bearer YOUR_TOKEN" http://localhost:8080/api/marks
+http GET "http://127.0.0.1:3000/api/marks?semester=CH2025261" \
+    Authorization:"Bearer YOUR_JWT_TOKEN"
 ```
 
-### 4. Exam Schedule
-Returns exam dates, reporting times, and seating venues.
+**Timetable:**
 ```bash
-curl -H "Authorization: Bearer YOUR_TOKEN" http://localhost:8080/api/exams
+http GET "http://127.0.0.1:3000/api/timetable?semester=CH2025261" \
+    Authorization:"Bearer YOUR_JWT_TOKEN"
 ```
 
-### 5. Grades (CGPA)
-Returns your overall CGPA and a history of letter grades across all semesters.
+**Grades:**
+*(No semester ID required)*
 ```bash
-curl -H "Authorization: Bearer YOUR_TOKEN" http://localhost:8080/api/grades
-```
-
-### 6. Academic Calendar
-Returns instructional and non-instructional days for the semester.
-```bash
-curl -H "Authorization: Bearer YOUR_TOKEN" http://localhost:8080/api/calendar
-```
-
-### 7. Courses / Semesters
-Returns the list of available semesters you can query.
-```bash
-curl -H "Authorization: Bearer YOUR_TOKEN" http://localhost:8080/api/courses
-```
-
-### 8. Faculty / Student Profile
-Returns your basic profile and faculty advisor information.
-```bash
-curl -H "Authorization: Bearer YOUR_TOKEN" http://localhost:8080/api/faculty
+http GET "http://127.0.0.1:3000/api/grades" \
+    Authorization:"Bearer YOUR_JWT_TOKEN"
 ```
 
 ---
 
-## 🛡️ Important Notes for Frontend Devs
-- **If you receive `{"status": "error", "error": "VTOP_SESSION_EXPIRED"}`**: VTOP has killed your upstream session (usually happens after 15 minutes of inactivity or randomly on VTOP's side). You must redirect the user back to the login screen and get a new token. Do not just blindly retry!
-- **Caching**: The backend caches data for 3 minutes. If a student's attendance just updated, they might need to wait 3 minutes before it reflects via this API.
+## 🔒 Security & Privacy
+
+This proxy acts as a secure, stateless bridge.
+- **No Credentials Stored:** User passwords are submitted directly to VTOP and are NEVER logged or stored.
+- **In-Memory Sessions:** Authenticated sessions are held in memory and automatically garbage-collected after expiration.
+- **Fast:** Subsequent requests hit cached data (when appropriate) to reduce latency and VTOP server load.
+
+## 📄 License
+
+MIT License. See `LICENSE` for more details.

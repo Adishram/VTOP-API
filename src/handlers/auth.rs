@@ -70,10 +70,11 @@ fn extract_csrf(html: &str) -> Option<String> {
 
 fn extract_captcha(html: &str) -> Option<String> {
     let document = Html::parse_document(html);
-    let sel = Selector::parse("#captchaBlock img").unwrap();
-    if let Some(el) = document.select(&sel).next() {
+    // Look for any img with a base64 src
+    let sel = Selector::parse("img").unwrap();
+    for el in document.select(&sel) {
         if let Some(src) = el.value().attr("src") {
-            // src format: data:image/png;base64,...
+            // src format: data:image/png;base64,... or jpeg
             if src.starts_with("data:image/") {
                 return Some(src.to_string());
             }
@@ -107,7 +108,7 @@ pub async fn login(
     // 1. Create a fresh reqwest client with its own cookie jar
     let client = AppState::new_client();
 
-    // 2. GET /vtop/login to grab JSESSIONID and initial CSRF
+    // 2. GET /vtop/login to grab JSESSIONID and initial CSRF (this is the landing page)
     let login_url = format!("{}/login", state.config.vtop_base_url);
     let res = client.get(&login_url)
         .send()
@@ -117,7 +118,8 @@ pub async fn login(
     let html = res.text().await.unwrap_or_default();
     let csrf_token = extract_csrf(&html).ok_or_else(|| ApiError::internal("Missing CSRF on login page"))?;
 
-    // 3. POST /prelogin/setup to get the captcha image
+    // 3. POST /prelogin/setup with flag=VTOP to initiate the student login flow.
+    //    This redirects to /init/page -> /login, which now shows the actual login form with captcha.
     let setup_url = format!("{}/prelogin/setup", state.config.vtop_base_url);
     let form = [("flag", "VTOP"), ("_csrf", &csrf_token)];
     
@@ -125,14 +127,38 @@ pub async fn login(
         .form(&form)
         .send()
         .await
-        .map_err(|e| ApiError::internal(format!("Failed to fetch captcha: {}", e)))?;
-    
+        .map_err(|e| ApiError::internal(format!("Failed to POST /prelogin/setup: {}", e)))?;
+
+    // Follow redirects: reqwest auto-follows but POST->GET redirect may need manual handling.
+    // After the redirect chain, we should be on the login page with the captcha.
+    let final_url = res.url().clone();
     let html = res.text().await.unwrap_or_default();
-    
+
+    // If we didn't land on the login form page (no captcha), follow the redirect manually
+    let html = if extract_captcha(&html).is_none() {
+        let res = client.get(final_url)
+            .send()
+            .await
+            .map_err(|e| ApiError::internal(format!("Failed to follow redirect: {}", e)))?;
+        res.text().await.unwrap_or_default()
+    } else {
+        html
+    };
+
+    // If still no captcha, try fetching /login again with the now-established session
+    let html = if extract_captcha(&html).is_none() {
+        let res = client.get(&login_url)
+            .send()
+            .await
+            .map_err(|e| ApiError::internal(format!("Failed to re-fetch /login: {}", e)))?;
+        res.text().await.unwrap_or_default()
+    } else {
+        html
+    };
+
     let captcha_image = extract_captcha(&html)
         .ok_or_else(|| ApiError::internal("Could not find captcha image in VTOP response"))?;
     
-    // CSRF is rotated here, get the new one
     let new_csrf = extract_csrf(&html).unwrap_or(csrf_token);
 
     // 4. Save to in-progress map

@@ -25,7 +25,7 @@ pub struct MarkComponent {
 pub fn parse_marks_html(html: &str) -> Result<Vec<CourseMarks>, String> {
     let document = Html::parse_document(html);
     // Find the outer table rows
-    let row_selector = Selector::parse("#fixedTableContainer > table > tbody > tr").unwrap();
+    let row_selector = Selector::parse("table.customTable > tbody > tr, table.customTable > tr").unwrap();
     let cell_selector = Selector::parse("td").unwrap();
     let inner_row_selector = Selector::parse("table tr").unwrap();
 
@@ -42,15 +42,15 @@ pub fn parse_marks_html(html: &str) -> Result<Vec<CourseMarks>, String> {
                 // Parse nested table
                 for inner_row in row.select(&inner_row_selector).skip(1) { // skip inner header
                     let cells: Vec<_> = inner_row.select(&cell_selector).collect();
-                    if cells.len() >= 7 {
+                    if cells.len() >= 8 {
                         course.components.push(MarkComponent {
-                            title: cells[0].text().collect::<String>().trim().to_string(),
-                            max_marks: cells[1].text().collect::<String>().trim().to_string(),
-                            weightage_percent: cells[2].text().collect::<String>().trim().to_string(),
-                            scored: cells[3].text().collect::<String>().trim().to_string(),
-                            weightage_mark: cells[4].text().collect::<String>().trim().to_string(),
-                            average: cells[5].text().collect::<String>().trim().to_string(),
-                            status: cells[6].text().collect::<String>().trim().to_string(),
+                            title: cells[1].text().collect::<String>().trim().to_string(),
+                            max_marks: cells[2].text().collect::<String>().trim().to_string(),
+                            weightage_percent: cells[3].text().collect::<String>().trim().to_string(),
+                            scored: cells[5].text().collect::<String>().trim().to_string(),
+                            weightage_mark: cells[6].text().collect::<String>().trim().to_string(),
+                            average: cells[7].text().collect::<String>().trim().to_string(),
+                            status: cells[4].text().collect::<String>().trim().to_string(),
                         });
                     }
                 }
@@ -59,12 +59,12 @@ pub fn parse_marks_html(html: &str) -> Result<Vec<CourseMarks>, String> {
         } else {
             // It's a summary row
             let cells: Vec<_> = row.select(&cell_selector).collect();
-            if cells.len() >= 5 {
+            if cells.len() >= 8 {
                 current_course = Some(CourseMarks {
-                    course_code: cells[1].text().collect::<String>().trim().to_string(),
-                    course_title: cells[2].text().collect::<String>().trim().to_string(),
-                    course_type: cells[3].text().collect::<String>().trim().to_string(),
-                    slot: cells[4].text().collect::<String>().trim().to_string(),
+                    course_code: cells[2].text().collect::<String>().trim().to_string(),
+                    course_title: cells[3].text().collect::<String>().trim().to_string(),
+                    course_type: cells[4].text().collect::<String>().trim().to_string(),
+                    slot: cells[7].text().collect::<String>().trim().to_string(),
                     components: Vec::new(),
                 });
             }

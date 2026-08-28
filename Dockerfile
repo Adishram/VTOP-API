@@ -33,6 +33,9 @@ COPY --from=builder /app/target/release/vtop-api /usr/local/bin/vtop-api
 RUN useradd -m appuser && chown -R appuser /app
 USER appuser
 
-EXPOSE 8080
+ENV HOST=0.0.0.0
+ENV PORT=3000
+
+EXPOSE 3000
 
 ENTRYPOINT ["vtop-api"]

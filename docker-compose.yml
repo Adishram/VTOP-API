@@ -1,16 +1,13 @@
-
-
+version: "3.8"
 services:
   api:
     build: .
     image: vtop-api:latest
     container_name: vtop-backend
     ports:
-      - "8080:8080"
-    # Load environment variables from the .env file
-    env_file:
-      - .env
+      - "3000:3000"
     restart: unless-stopped
     environment:
-      # You can override config variables here if needed
-      - RUST_LOG=info
+      - RUST_LOG=vtop_api=info,tower_http=info
+      - HOST=0.0.0.0
+      - PORT=3000
