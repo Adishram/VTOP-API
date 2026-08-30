@@ -28,30 +28,17 @@ The absolute easiest way to run VTOP-API is using Docker. It requires zero depen
 
 The API is now running locally on `http://127.0.0.1:3000`!
 
----
 
-## 🛠 Manual Setup (Cargo)
-
-If you prefer to run it natively or want to contribute:
-
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/Adishram/VTOP-API.git
-   cd VTOP-API
-   ```
-
-2. **Run the server:**
-   ```bash
-   cargo run --release
-   ```
-
-*(Requires Rust toolchain to be installed).*
-
----
 
 ## 📖 API Usage Guide
 
 Testing the API is incredibly simple. Below is a step-by-step walkthrough using `httpie` (you can also use Postman, Insomnia, or cURL).
+
+### 💡 HTTPie Syntax Cheat Sheet
+Before getting started, here's how `httpie` parses arguments:
+- **JSON Body fields:** `key="value"` (e.g., `username="123"`)
+- **Query Parameters:** `key==value` (e.g., `semester==CH2025261`) - Note the double equals `==`! (Alternatively, append them directly to the URL like `?semester=CH2025261`)
+- **HTTP Headers:** `Header:Value` (e.g., `Authorization:"Bearer TOKEN"`)
 
 ### 1. Initiate Login
 
