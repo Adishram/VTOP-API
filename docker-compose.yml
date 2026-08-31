@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   api:
     build: .
@@ -11,3 +10,5 @@ services:
       - RUST_LOG=vtop_api=info,tower_http=info
       - HOST=0.0.0.0
       - PORT=3000
+      - VTOP_BASE_URL=${VTOP_BASE_URL:-https://vtopcc.vit.ac.in/vtop}
+      - SESSION_TTL_SECS=${SESSION_TTL_SECS:-1800}

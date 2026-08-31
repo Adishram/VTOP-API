@@ -1,6 +1,5 @@
 use axum::extract::State;
 use axum::Json;
-use axum::http::StatusCode;
 use jsonwebtoken::{encode, EncodingKey, Header};
 use scraper::{Html, Selector};
 use serde::{Deserialize, Serialize};

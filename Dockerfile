@@ -35,6 +35,9 @@ USER appuser
 
 ENV HOST=0.0.0.0
 ENV PORT=3000
+ENV VTOP_BASE_URL=https://vtopcc.vit.ac.in/vtop
+ENV SESSION_TTL_SECS=1800
+ENV RUST_LOG=vtop_api=info,tower_http=info
 
 EXPOSE 3000
 

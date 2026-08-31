@@ -21,7 +21,7 @@ impl Config {
                 .and_then(|p| p.parse().ok())
                 .unwrap_or(3000),
             vtop_base_url: env::var("VTOP_BASE_URL")
-                .unwrap_or_else(|_| "https://vtop.vitchennai.ac.in/vtop".into()),
+                .unwrap_or_else(|_| "https://vtopcc.vit.ac.in/vtop".into()),
             session_ttl_secs: env::var("SESSION_TTL_SECS")
                 .ok()
                 .and_then(|s| s.parse().ok())
